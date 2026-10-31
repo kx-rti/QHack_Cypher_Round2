@@ -26,13 +26,23 @@ export class ApiError extends Error {
   }
 }
 
-// Support VITE_API_BASE_URL for deployed environments (e.g. Render/Vercel)
-// Falls back to empty string in development so Vite dev proxy handles /api
-const BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
+// 1. Check runtime localStorage override (so user can configure without rebuilding)
+// 2. Check Vite build-time environment variable
+// 3. Default to empty string (which uses relative paths for Vercel rewrites / Vite dev proxy)
+function getBaseUrl(): string {
+  try {
+    const saved = localStorage.getItem("ADAPTIVECRYPT_BACKEND_URL");
+    if (saved && saved.trim()) return saved.trim().replace(/\/+$/, "");
+  } catch {
+    // ignore
+  }
+  return (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
+}
 
 function toUrl(path: string): string {
   if (path.startsWith("http://") || path.startsWith("https://")) return path;
-  return `${BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`;
+  const base = getBaseUrl();
+  return `${base}${path.startsWith("/") ? "" : "/"}${path}`;
 }
 
 async function failure(response: Response): Promise<ApiError> {
@@ -52,8 +62,9 @@ async function send(path: string, init?: RequestInit): Promise<Response> {
   const url = toUrl(path);
   try {
     response = await fetch(url, init);
-  } catch {
-    throw new ApiError(0, "The backend is not reachable. Verify your backend server is running.");
+  } catch (err) {
+    const attemptedUrl = url.startsWith("http") ? url : `${window.location.origin}${url}`;
+    throw new ApiError(0, `Cannot reach backend at ${attemptedUrl}. Check Render deployment or set Backend URL.`);
   }
   if (!response.ok) throw await failure(response);
   return response;
@@ -90,6 +101,10 @@ async function download(path: string, body: unknown, filename: string): Promise<
 }
 
 export const api = {
+  getBaseUrl,
+  setBaseUrl: (url: string) => {
+    localStorage.setItem("ADAPTIVECRYPT_BACKEND_URL", url.trim().replace(/\/+$/, ""));
+  },
   health: () => get<HealthResponse>("/api/health"),
   benchmarks: () => get<BenchmarkProfileResponse>("/api/benchmarks"),
   runBenchmarks: (runs: number, warmup: number) =>
