@@ -26,6 +26,15 @@ export class ApiError extends Error {
   }
 }
 
+// Support VITE_API_BASE_URL for deployed environments (e.g. Render/Vercel)
+// Falls back to empty string in development so Vite dev proxy handles /api
+const BASE_URL = (import.meta.env.VITE_API_BASE_URL || "").replace(/\/+$/, "");
+
+function toUrl(path: string): string {
+  if (path.startsWith("http://") || path.startsWith("https://")) return path;
+  return `${BASE_URL}${path.startsWith("/") ? "" : "/"}${path}`;
+}
+
 async function failure(response: Response): Promise<ApiError> {
   let message = `Request failed (${response.status})`;
   try {
@@ -33,18 +42,18 @@ async function failure(response: Response): Promise<ApiError> {
     if (typeof body.detail === "string") message = body.detail;
     else if (Array.isArray(body.detail)) message = body.detail.map((d: { msg: string }) => d.msg).join("; ");
   } catch {
-    // Not JSON: usually the dev proxy reporting that the backend is down.
-    if (response.status >= 500) message = "The backend is not reachable. Start it with uvicorn on port 8000.";
+    if (response.status >= 500) message = "The backend is not reachable. Verify your backend server is running.";
   }
   return new ApiError(response.status, message);
 }
 
 async function send(path: string, init?: RequestInit): Promise<Response> {
   let response: Response;
+  const url = toUrl(path);
   try {
-    response = await fetch(path, init);
+    response = await fetch(url, init);
   } catch {
-    throw new ApiError(0, "The backend is not reachable. Start it with uvicorn on port 8000.");
+    throw new ApiError(0, "The backend is not reachable. Verify your backend server is running.");
   }
   if (!response.ok) throw await failure(response);
   return response;
