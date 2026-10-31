@@ -1,0 +1,141 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+
+  body {
+    @apply bg-obsidian font-sans text-ink-body antialiased;
+    background-image:
+      linear-gradient(rgba(196, 241, 53, 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(196, 241, 53, 0.035) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+
+  h1,
+  h2,
+  h3 {
+    @apply font-display font-bold uppercase tracking-wider text-ink;
+  }
+
+  :focus-visible {
+    outline: 2px solid #c4f135;
+    outline-offset: 2px;
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: rgba(196, 241, 53, 0.25);
+    border-radius: 4px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+}
+
+@layer components {
+  .card {
+    @apply rounded-xl border border-acid-muted bg-charcoal p-4;
+  }
+
+  .field-label {
+    @apply mb-1.5 block text-xs font-medium uppercase tracking-wide text-ink-muted;
+  }
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg border border-acid-muted px-3 py-2 text-sm font-medium text-ink transition-colors hover:bg-charcoal-hover disabled:cursor-not-allowed disabled:opacity-50;
+  }
+
+  .btn-primary {
+    @apply border-acid bg-acid text-obsidian hover:bg-acid-hover;
+  }
+
+  .control {
+    @apply w-full rounded-lg border border-acid-muted bg-obsidian px-2.5 py-2 text-sm text-ink;
+  }
+
+  .data-table {
+    @apply w-full text-left text-sm;
+  }
+
+  .data-table th {
+    @apply whitespace-nowrap border-b border-acid-muted px-2 py-2 text-xs font-medium uppercase tracking-wide text-ink-muted;
+  }
+
+  .data-table td {
+    @apply border-b border-white/5 px-2 py-2 font-mono text-xs text-ink-body;
+  }
+
+  .data-table td:first-child {
+    @apply font-sans text-sm text-ink;
+  }
+}
+
+input[type="range"] {
+  accent-color: #c4f135;
+  width: 100%;
+}
+
+.ticker-track {
+  animation: ticker 45s linear infinite;
+}
+
+.pulse-crosshair {
+  animation: crosshair 1.6s ease-in-out infinite;
+}
+
+/* Secondary encoding for downgraded map cells, so they do not rely on color alone. */
+.hatched {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(11, 13, 12, 0.75) 0 2px,
+    transparent 2px 5px
+  );
+}
+
+/* HYBRID amber and QUANTUM-SAFE lime are hard to separate under deuteranopia, so HYBRID also gets a texture. */
+.texture-hybrid {
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(11, 13, 12, 0.45) 0 1px,
+    transparent 1px 4px
+  );
+}
+
+@keyframes ticker {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes crosshair {
+  0%,
+  100% {
+    transform: translate(-50%, 50%) scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: translate(-50%, 50%) scale(1.35);
+    opacity: 0.6;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ticker-track,
+  .pulse-crosshair {
+    animation: none;
+  }
+}

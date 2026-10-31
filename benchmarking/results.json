@@ -1,0 +1,104 @@
+{
+  "pqc_backend": "kyber-py / dilithium-py (educational pure-Python fallback, not constant-time hardened)",
+  "host_metadata": {
+    "platform": "macOS-26.6.2-arm64-arm-64bit-Mach-O",
+    "processor": "arm",
+    "python_version": "3.14.8",
+    "timestamp": "2026-10-30T17:34:37+00:00"
+  },
+  "modes": {
+    "CLASSICAL": {
+      "handshake_ms_median": 0.12756200158037245,
+      "handshake_ms_mean": 0.12779992684954777,
+      "handshake_ms_p95": 0.12979100574739277,
+      "handshake_bytes": 64,
+      "runs": 40
+    },
+    "QUANTUM_SAFE": {
+      "handshake_ms_median": 11.36681299249176,
+      "handshake_ms_mean": 11.36850209950353,
+      "handshake_ms_p95": 11.40775001840666,
+      "handshake_bytes": 2272,
+      "runs": 40
+    },
+    "HYBRID": {
+      "handshake_ms_median": 11.494895996293053,
+      "handshake_ms_mean": 11.493538524518954,
+      "handshake_ms_p95": 11.550249997526407,
+      "handshake_bytes": 2336,
+      "runs": 40
+    }
+  },
+  "aes": {
+    "mb_per_s": 3684.3743558729548,
+    "payload_bytes": 1000000,
+    "ciphertext_overhead_bytes": 28,
+    "runs": 20
+  },
+  "signatures": {
+    "Ed25519": {
+      "public_key_bytes": 32,
+      "signature_bytes": 64,
+      "keygen_ms": {
+        "median": 0.029874994652345777,
+        "mean": 0.029941532799663644,
+        "p95": 0.030665978556498885
+      },
+      "sign_ms": {
+        "median": 0.027416492230258882,
+        "mean": 0.027551364231233794,
+        "p95": 0.027874979423359036
+      },
+      "verify_ms": {
+        "median": 0.07372901018243283,
+        "mean": 0.07354587238902847,
+        "p95": 0.07429200923070312
+      },
+      "runs": 30
+    },
+    "ML-DSA-65": {
+      "public_key_bytes": 1952,
+      "signature_bytes": 3309,
+      "keygen_ms": {
+        "median": 7.980124995810911,
+        "mean": 7.976030564168468,
+        "p95": 8.00333300139755
+      },
+      "sign_ms": {
+        "median": 44.07474999607075,
+        "mean": 49.25877913580431,
+        "p95": 104.26683400874026
+      },
+      "verify_ms": {
+        "median": 9.062604498467408,
+        "mean": 9.064352768473327,
+        "p95": 9.107958991080523
+      },
+      "runs": 30
+    }
+  },
+  "auth_handshake": {
+    "CLASSICAL": {
+      "handshake_ms_median": 0.3926249919459224,
+      "handshake_ms_mean": 0.43814160162582994,
+      "handshake_ms_p95": 0.6216249894350767,
+      "handshake_bytes": 472,
+      "runs": 5
+    },
+    "QUANTUM_SAFE": {
+      "handshake_ms_median": 145.04191701416858,
+      "handshake_ms_mean": 145.05193340592086,
+      "handshake_ms_p95": 235.03812501439825,
+      "handshake_bytes": 9163,
+      "runs": 5
+    },
+    "HYBRID": {
+      "handshake_ms_median": 124.61195900687017,
+      "handshake_ms_mean": 137.76363380020484,
+      "handshake_ms_p95": 193.2274589780718,
+      "handshake_bytes": 9437,
+      "runs": 5
+    }
+  },
+  "data_origin": "MEASURED_LOCAL_CRYPTO"
+}

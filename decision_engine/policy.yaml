@@ -1,0 +1,21 @@
+# AdaptiveCrypt policy (Round 2 Upgrade A). Defaults reproduce the Round 1 policy in Cypher.pdf, pp. 12-13.
+sensitivity_levels:
+  LOW: 10
+  MEDIUM: 45
+  HIGH: 80
+  CRITICAL: 100
+weights:
+  sens: 0.60
+  life: 0.40
+  lat: 0.65
+  bw: 0.35
+thresholds:
+  t_high: 25.0
+  t_low: -25.0
+safety_floor:
+  min_sensitivity: [HIGH, CRITICAL]
+  min_lifetime_years: 10.0
+hysteresis:
+  persistence_samples: 3
+  net_margin: 8.0
+  ewma_alpha: 0.30
