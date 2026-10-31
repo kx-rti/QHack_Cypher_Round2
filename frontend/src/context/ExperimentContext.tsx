@@ -95,13 +95,31 @@ export function ExperimentProvider({ children }: { children: ReactNode }) {
       setWorkloads(w);
       setHealthError("");
       if (h.benchmarks_loaded) setProfile(await api.benchmarks());
+      return true;
     } catch (error) {
       setHealthError((error as Error).message);
+      return false;
     }
   }, []);
 
+  // Poll until backend comes online (handles Render free tier spin-up delay)
   useEffect(() => {
-    void loadReference();
+    let timer: number;
+    let cancelled = false;
+
+    async function checkHealth() {
+      const ok = await loadReference();
+      if (!ok && !cancelled) {
+        timer = window.setTimeout(checkHealth, 3000);
+      }
+    }
+
+    void checkHealth();
+
+    return () => {
+      cancelled = true;
+      window.clearTimeout(timer);
+    };
   }, [loadReference]);
 
   useEffect(() => {
